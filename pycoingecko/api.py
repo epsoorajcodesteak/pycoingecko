@@ -13,6 +13,7 @@ class CoinGeckoAPI:
 
     def __init__(self, api_base_url=__API_URL_BASE, api_key=__API_KEY):
         self.api_base_url = api_base_url
+        self.api_key = api_key
         self.request_timeout = 120
 
         self.session = requests.Session()
@@ -23,7 +24,7 @@ class CoinGeckoAPI:
     def __request(self, url):
         # print(url)
 
-        url += f'&x_cg_pro_api_key={self.__API_KEY}'
+        url += f'&x_cg_pro_api_key={self.api_key}'
 
         try:
             response = self.session.get(url, timeout=self.request_timeout)
