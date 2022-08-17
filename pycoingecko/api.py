@@ -24,6 +24,9 @@ class CoinGeckoAPI:
     def __request(self, url):
         # print(url)
 
+        if '?' not in url:
+            url += '?'
+
         url += f'&x_cg_pro_api_key={self.api_key}'
 
         try:
