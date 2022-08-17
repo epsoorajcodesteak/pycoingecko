@@ -29,6 +29,8 @@ class CoinGeckoAPI:
 
         url += f'&x_cg_pro_api_key={self.api_key}'
 
+        print(url)
+
         try:
             response = self.session.get(url, timeout=self.request_timeout)
         except requests.exceptions.RequestException:
