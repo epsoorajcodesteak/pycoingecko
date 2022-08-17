@@ -9,17 +9,22 @@ from .utils import func_args_preprocessing
 
 class CoinGeckoAPI:
     __API_URL_BASE = 'https://api.coingecko.com/api/v3/'
+    __API_KEY = ''
 
-    def __init__(self, api_base_url=__API_URL_BASE):
+    def __init__(self, api_base_url=__API_URL_BASE, api_key=__API_KEY):
         self.api_base_url = api_base_url
         self.request_timeout = 120
 
         self.session = requests.Session()
-        retries = Retry(total=5, backoff_factor=0.5, status_forcelist=[502, 503, 504])
+        retries = Retry(total=5, backoff_factor=0.5,
+                        status_forcelist=[502, 503, 504])
         self.session.mount('http://', HTTPAdapter(max_retries=retries))
 
     def __request(self, url):
         # print(url)
+        if self.__API_KEY != '':
+            url += f'&x_cg_pro_api_key={self.__API_KEY}'
+
         try:
             response = self.session.get(url, timeout=self.request_timeout)
         except requests.exceptions.RequestException:
@@ -163,8 +168,10 @@ class CoinGeckoAPI:
     def get_coin_market_chart_by_id(self, id, vs_currency, days, **kwargs):
         """Get historical market data include price, market cap, and 24h volume (granularity auto)"""
 
-        api_url = '{0}coins/{1}/market_chart?vs_currency={2}&days={3}'.format(self.api_base_url, id, vs_currency, days)
-        api_url = self.__api_url_params(api_url, kwargs, api_url_has_params=True)
+        api_url = '{0}coins/{1}/market_chart?vs_currency={2}&days={3}'.format(
+            self.api_base_url, id, vs_currency, days)
+        api_url = self.__api_url_params(
+            api_url, kwargs, api_url_has_params=True)
 
         return self.__request(api_url)
 
@@ -175,7 +182,8 @@ class CoinGeckoAPI:
         api_url = '{0}coins/{1}/market_chart/range?vs_currency={2}&from={3}&to={4}'.format(self.api_base_url, id,
                                                                                            vs_currency, from_timestamp,
                                                                                            to_timestamp)
-        api_url = self.__api_url_params(api_url, kwargs, api_url_has_params=True)
+        api_url = self.__api_url_params(
+            api_url, kwargs, api_url_has_params=True)
 
         return self.__request(api_url)
 
@@ -192,8 +200,10 @@ class CoinGeckoAPI:
     def get_coin_ohlc_by_id(self, id, vs_currency, days, **kwargs):
         """Get coin's OHLC"""
 
-        api_url = '{0}coins/{1}/ohlc?vs_currency={2}&days={3}'.format(self.api_base_url, id, vs_currency, days)
-        api_url = self.__api_url_params(api_url, kwargs, api_url_has_params=True)
+        api_url = '{0}coins/{1}/ohlc?vs_currency={2}&days={3}'.format(
+            self.api_base_url, id, vs_currency, days)
+        api_url = self.__api_url_params(
+            api_url, kwargs, api_url_has_params=True)
 
         return self.__request(api_url)
 
@@ -202,7 +212,8 @@ class CoinGeckoAPI:
     def get_coin_info_from_contract_address_by_id(self, id, contract_address, **kwargs):
         """Get coin info from contract address"""
 
-        api_url = '{0}coins/{1}/contract/{2}'.format(self.api_base_url, id, contract_address)
+        api_url = '{0}coins/{1}/contract/{2}'.format(
+            self.api_base_url, id, contract_address)
         api_url = self.__api_url_params(api_url, kwargs)
 
         return self.__request(api_url)
@@ -214,7 +225,8 @@ class CoinGeckoAPI:
         api_url = '{0}coins/{1}/contract/{2}/market_chart/?vs_currency={3}&days={4}'.format(self.api_base_url, id,
                                                                                             contract_address,
                                                                                             vs_currency, days)
-        api_url = self.__api_url_params(api_url, kwargs, api_url_has_params=True)
+        api_url = self.__api_url_params(
+            api_url, kwargs, api_url_has_params=True)
 
         return self.__request(api_url)
 
@@ -299,7 +311,8 @@ class CoinGeckoAPI:
     def get_exchanges_status_updates_by_id(self, id, **kwargs):
         """Get status updates for a given exchange"""
 
-        api_url = '{0}exchanges/{1}/status_updates'.format(self.api_base_url, id)
+        api_url = '{0}exchanges/{1}/status_updates'.format(
+            self.api_base_url, id)
         api_url = self.__api_url_params(api_url, kwargs)
 
         return self.__request(api_url)
@@ -480,7 +493,8 @@ class CoinGeckoAPI:
     def get_global_decentralized_finance_defi(self, **kwargs):
         """Get cryptocurrency global decentralized finance(defi) data"""
 
-        api_url = '{0}global/decentralized_finance_defi'.format(self.api_base_url)
+        api_url = '{0}global/decentralized_finance_defi'.format(
+            self.api_base_url)
         api_url = self.__api_url_params(api_url, kwargs)
 
         return self.__request(api_url)['data']
@@ -490,7 +504,8 @@ class CoinGeckoAPI:
     def get_companies_public_treasury_by_coin_id(self, coin_id, **kwargs):
         """Get public companies data"""
 
-        api_url = '{0}companies/public_treasury/{1}'.format(self.api_base_url, coin_id)
+        api_url = '{0}companies/public_treasury/{1}'.format(
+            self.api_base_url, coin_id)
         api_url = self.__api_url_params(api_url, kwargs)
 
         return self.__request(api_url)
