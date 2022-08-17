@@ -22,8 +22,8 @@ class CoinGeckoAPI:
 
     def __request(self, url):
         # print(url)
-        if self.__API_KEY != '':
-            url += f'&x_cg_pro_api_key={self.__API_KEY}'
+
+        url += f'&x_cg_pro_api_key={self.__API_KEY}'
 
         try:
             response = self.session.get(url, timeout=self.request_timeout)
